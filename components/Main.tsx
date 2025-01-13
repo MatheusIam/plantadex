@@ -8,6 +8,7 @@ import { SignInScreen } from '../screens/SignInScreen';
 import { ManagerScreen } from '../screens/ManagerScreen';
 import { ICScreen } from '../screens/ICScreen';
 import { AboutScreen } from '../screens/AboutScreen';
+import PlantaScreen from '@/screens/PlantaScreen';
 
 const NativeStack = createNativeStackNavigator();
 
@@ -27,6 +28,8 @@ const Main = () => {
             )}
             <NativeStack.Screen name={'Profile'} component={ProfileScreen} />
             <NativeStack.Screen name={'About'} component={AboutScreen} />
+            <NativeStack.Screen name={'PLANTAS'} component={PlantaScreen} />
+
           </>
         ) : (
           <NativeStack.Screen
