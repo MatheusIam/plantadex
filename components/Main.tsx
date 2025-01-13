@@ -28,7 +28,7 @@ const Main = () => {
             )}
             <NativeStack.Screen name={'Profile'} component={ProfileScreen} />
             <NativeStack.Screen name={'About'} component={AboutScreen} />
-            <NativeStack.Screen name={'PLANTAS'} component={PlantaScreen} />
+            <NativeStack.Screen name={'Plantas'} component={PlantaScreen} />
 
           </>
         ) : (

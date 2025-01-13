@@ -22,6 +22,14 @@ const Menu = () => {
         onPress={() => navigation.navigate('Profile')}
         title={'Profile'}
       />
+      <Button
+        onPress={() => navigation.navigate('Plantas')}
+        title={'Plantas'}
+      />
+      <Button
+        onPress={() => navigation.navigate('About')}
+        title={'About'}
+      />
     </View>
   );
 };

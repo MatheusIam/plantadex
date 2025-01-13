@@ -1,9 +1,13 @@
-// Estruturação inicial para o app PLANTADEX com Expo
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, ActivityIndicator } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, StyleSheet, Text, View, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { AuthContext } from '../components/context/AuthContext';
 import axios from 'axios';
+import { ThemedText } from '@/components/ThemedText';
 
 const PlantaScreen = () => {
+  const { state, signOut } = useContext(AuthContext);
+
+  // Estados para as funcionalidades de PlantaScreen
   const [plantas, setPlantas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -43,7 +47,7 @@ const PlantaScreen = () => {
   }
 
   return (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={styles.container}
       onScroll={({ nativeEvent }) => {
         if (nativeEvent.layoutMeasurement.height + nativeEvent.contentOffset.y >= nativeEvent.contentSize.height - 20) {
@@ -52,29 +56,46 @@ const PlantaScreen = () => {
       }}
       scrollEventThrottle={400}
     >
-      {plantas.map((planta) => (
-        <View key={planta.id} style={styles.card}>
-          <Image
-            source={{ uri: planta.default_image?.small_url || 'https://via.placeholder.com/150' }}
-            style={styles.image}
-          />
-          <Text style={styles.title}>{planta.common_name || 'Nome não disponível'}</Text>
-          <Text><Text style={styles.label}>Nome Científico:</Text> {planta.scientific_name.join(', ')}</Text>
-          <Text><Text style={styles.label}>Ciclo:</Text> {planta.cycle}</Text>
-          <Text><Text style={styles.label}>Rega:</Text> {planta.watering}</Text>
-        </View>
-      ))}
-      {isLoadingMore && <ActivityIndicator size="small" color="#00ff00" style={styles.loadingMore} />}
+      
+
+      <View style={styles.plantasContainer}>
+        {plantas.map((planta) => (
+          <View key={planta.id} style={styles.card}>
+            <Image
+              source={{ uri: planta.default_image?.small_url || 'https://via.placeholder.com/150' }}
+              style={styles.image}
+            />
+            <ThemedText style={styles.title}>{planta.common_name || 'Nome não disponível'}</ThemedText>
+<ThemedText>
+  <ThemedText style={styles.label}>Nome Científico:</ThemedText> {planta.scientific_name.join(', ')}
+</ThemedText>
+<ThemedText>
+  <ThemedText style={styles.label}>Ciclo:</ThemedText> {planta.cycle}
+</ThemedText>
+<ThemedText>
+  <ThemedText style={styles.label}>Rega:</ThemedText> {planta.watering}
+</ThemedText>
+
+          </View>
+        ))}
+        {isLoadingMore && <ActivityIndicator size="small" color="#00ff00" style={styles.loadingMore} />}
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    padding: 20,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  plantasContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    padding: 20,
   },
   loadingContainer: {
     flex: 1,
@@ -114,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlantaScreen;
+export default PlantaScreen ;
