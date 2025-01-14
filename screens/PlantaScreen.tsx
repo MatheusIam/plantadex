@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, View, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { Button, StyleSheet, Text, View, ScrollView, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../components/context/AuthContext';
 import axios from 'axios';
 import { ThemedText } from '@/components/ThemedText';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Biblioteca de ícones
 
 const PlantaScreen = () => {
   const { state, signOut } = useContext(AuthContext);
@@ -12,6 +13,7 @@ const PlantaScreen = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [likedPlantas, setLikedPlantas] = useState({}); // Estado para os likes
 
   useEffect(() => {
     // Função para buscar dados da API
@@ -37,6 +39,13 @@ const PlantaScreen = () => {
     }
   };
 
+  const toggleLike = (id) => {
+    setLikedPlantas((prevLikes) => ({
+      ...prevLikes,
+      [id]: !prevLikes[id],
+    }));
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -56,8 +65,6 @@ const PlantaScreen = () => {
       }}
       scrollEventThrottle={400}
     >
-      
-
       <View style={styles.plantasContainer}>
         {plantas.map((planta) => (
           <View key={planta.id} style={styles.card}>
@@ -66,16 +73,26 @@ const PlantaScreen = () => {
               style={styles.image}
             />
             <ThemedText style={styles.title}>{planta.common_name || 'Nome não disponível'}</ThemedText>
-<ThemedText>
-  <ThemedText style={styles.label}>Nome Científico:</ThemedText> {planta.scientific_name.join(', ')}
-</ThemedText>
-<ThemedText>
-  <ThemedText style={styles.label}>Ciclo:</ThemedText> {planta.cycle}
-</ThemedText>
-<ThemedText>
-  <ThemedText style={styles.label}>Rega:</ThemedText> {planta.watering}
-</ThemedText>
-
+            <ThemedText>
+              <ThemedText style={styles.label}>Nome Científico:</ThemedText> {planta.scientific_name.join(', ')}
+            </ThemedText>
+            <ThemedText>
+              <ThemedText style={styles.label}>Ciclo:</ThemedText> {planta.cycle}
+            </ThemedText>
+            <ThemedText>
+              <ThemedText style={styles.label}>Rega:</ThemedText> {planta.watering}
+            </ThemedText>
+            {/* Botão de Curtir */}
+            <TouchableOpacity
+              style={styles.likeButton}
+              onPress={() => toggleLike(planta.id)}
+            >
+              <Icon
+                name={likedPlantas[planta.id] ? 'favorite' : 'favorite-border'}
+                size={24}
+                color={likedPlantas[planta.id] ? 'red' : 'gray'}
+              />
+            </TouchableOpacity>
           </View>
         ))}
         {isLoadingMore && <ActivityIndicator size="small" color="#00ff00" style={styles.loadingMore} />}
@@ -87,10 +104,6 @@ const PlantaScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-  },
-  profileContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
   },
   plantasContainer: {
     flexDirection: 'row',
@@ -115,6 +128,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    position: 'relative', // Necessário para posicionar o botão
   },
   image: {
     width: '100%',
@@ -130,9 +144,14 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
   },
+  likeButton: {
+    position: 'absolute',
+    bottom: 8,
+    left: 8,
+  },
   loadingMore: {
     marginVertical: 16,
   },
 });
 
-export default PlantaScreen ;
+export default PlantaScreen;
